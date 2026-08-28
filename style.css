@@ -1282,3 +1282,37 @@ body.yak-backoffice [data-backpage-panel].yak-page-active{
   color:#91e7aa;
   border:1px solid #285d37;
 }
+
+/* YAK POS V5.2 — front-store offline/cloud safety monitor */
+.front-cloud-monitor{
+  grid-column:1 / -1;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:12px 14px;
+  border:1px solid rgba(148,163,184,.25);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(30,41,59,.94));
+  box-shadow:0 8px 24px rgba(0,0,0,.16);
+  color:#fff;
+}
+.front-cloud-main{display:flex;align-items:center;gap:11px;min-width:280px;flex:1}
+.front-cloud-copy{display:flex;flex-direction:column;gap:2px}
+.front-cloud-copy strong{font-size:14px}
+.front-cloud-copy small{color:#cbd5e1;font-size:12px}
+.front-cloud-badge{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:7px 10px;border-radius:999px;font-weight:800;font-size:12px}
+.front-cloud-badge.online{background:#064e3b;color:#a7f3d0;border:1px solid #10b981}
+.front-cloud-badge.offline{background:#450a0a;color:#fecaca;border:1px solid #ef4444}
+.front-cloud-badge.warning{background:#451a03;color:#fed7aa;border:1px solid #f97316}
+.front-cloud-badge.syncing{background:#172554;color:#bfdbfe;border:1px solid #3b82f6}
+.front-cloud-stats{display:flex;gap:8px;flex-wrap:wrap}
+.front-cloud-stats span{padding:6px 9px;border-radius:10px;background:rgba(255,255,255,.07);font-size:12px;color:#cbd5e1}
+.front-cloud-stats b{color:#fff;margin-left:4px}
+.front-cloud-actions{display:flex;gap:8px;flex-wrap:wrap}
+.front-cloud-actions .btn{white-space:nowrap}
+@media(max-width:900px){
+  .front-cloud-monitor{align-items:stretch}
+  .front-cloud-main,.front-cloud-stats,.front-cloud-actions{width:100%}
+  .front-cloud-actions .btn{flex:1}
+}

@@ -114,6 +114,23 @@
 
       <section id="frontView" class="view">
         <div class="front-layout">
+          <div class="front-cloud-monitor" id="frontCloudMonitor">
+            <div class="front-cloud-main">
+              <span id="frontCloudBadge" class="front-cloud-badge online">● Online</span>
+              <div class="front-cloud-copy">
+                <strong>Cloud / สำรองข้อมูลการขาย</strong>
+                <small id="frontCloudNote">กำลังตรวจสถานะ...</small>
+              </div>
+            </div>
+            <div class="front-cloud-stats">
+              <span>บิลรอส่ง <b id="frontCloudPending">0</b></span>
+              <span>Sync ล่าสุด <b id="frontCloudLast">ยังไม่เคย Sync</b></span>
+            </div>
+            <div class="front-cloud-actions">
+              <button type="button" class="btn" onclick="YAK_OFFLINE_520.checkCloud()">🔎 เช็ก Cloud</button>
+              <button type="button" class="btn primary" onclick="YAK_OFFLINE_520.syncPending(true)">☁️ ส่งข้อมูลค้างตอนนี้</button>
+            </div>
+          </div>
           <div class="panel products-panel">
             <div class="front-daily-summary">
               <div class="mini-stat"><span>ยอดขายวันนี้</span><strong id="frontTodaySales">฿0.00</strong></div>
@@ -293,7 +310,7 @@
   <div class="panel">
     <div class="panel-head">
       <div>
-        <h2>จัดการสินค้า / สต๊อก / ต้นทุน <span class="actual-v-badge">V5.1</span></h2>
+        <h2>จัดการสินค้า / สต๊อก / ต้นทุน <span class="actual-v-badge">V5.2</span></h2>
         <p>ตั้งราคาขาย ต้นทุน จำนวนคงเหลือ และจุดแจ้งเตือนเติมสินค้า • ถ้าเชื่อมวัตถุดิบแล้ว ระบบจะใช้สต๊อกวัตถุดิบเป็นหลัก</p>
       </div>
       <button id="prod63AddBtn" class="btn primary" type="button" onclick="prod63OpenAdd()">+ เพิ่มสินค้า</button>
@@ -423,7 +440,7 @@
     <div class="panel">
       <div class="panel-head actual-report-head">
         <div>
-          <h2>รายงานยอดขายและกำไร <span class="actual-v-badge">V5.1</span></h2>
+          <h2>รายงานยอดขายและกำไร <span class="actual-v-badge">V5.2</span></h2>
           <p>เลือกวันที่ เดือน หรือช่วงวันที่ได้โดยตรง</p>
         </div>
         <div class="actual-report-actions">
@@ -656,7 +673,7 @@
 <section class="panel backoffice-only" id="advancedReports" data-backpage-panel="reports">
  <div class="report28">
   <div class="report28-head">
-   <div><h2>รายงาน <span>V5.1</span></h2><p>รายงานยอดขายแบบ Real-time และย้อนหลัง</p></div>
+   <div><h2>รายงาน <span>V5.2</span></h2><p>รายงานยอดขายแบบ Real-time และย้อนหลัง</p></div>
    <div class="report28-actions">
     <button onclick="r28SavePdf()">📄 บันทึก PDF</button>
     <button onclick="r28Print()">🖨 พิมพ์รายงาน</button>
@@ -741,7 +758,7 @@
 <section id="receiptDesignerPanel" class="card backoffice-only receipt60-panel" data-backpage-panel="receipt">
   <div class="receipt60-head">
     <div>
-      <h2>ตกแต่งสลิป / หัวบิล <span class="actual-v-badge">V5.1</span></h2>
+      <h2>ตกแต่งสลิป / หัวบิล <span class="actual-v-badge">V5.2</span></h2>
       <p class="muted">ออกแบบหัวสลิปแล้วดูตัวอย่างก่อนบันทึก ค่าที่บันทึกจะใช้กับสลิปขายจริง</p>
     </div>
     <button id="rd60SaveBtn" type="button" class="btn primary">💾 บันทึกการตกแต่ง</button>
@@ -844,7 +861,7 @@
   <button type="button" class="yak-back-tab" data-backpage="receipt">ตกแต่งสลิป</button>
   <button type="button" class="yak-back-tab" data-backpage="settings">ตั้งค่า</button>
   <button type="button" class="yak-back-tab" data-backpage="online" onclick="YAK_ONLINE_510.openPage(event)">☁️ Online</button>
-  <div class="yak-version-chip">YAK POS V5.1</div>
+  <div class="yak-version-chip">YAK POS V5.2</div>
 </nav>
 </main>
 
@@ -926,5 +943,6 @@
 </div>
 
 <script src="online-v510.js"></script>
+<script src="offline-v520.js"></script>
 </body>
 </html>
