@@ -1316,3 +1316,110 @@ body.yak-backoffice [data-backpage-panel].yak-page-active{
   .front-cloud-main,.front-cloud-stats,.front-cloud-actions{width:100%}
   .front-cloud-actions .btn{flex:1}
 }
+
+
+/* YAK POS V5.3 Product Categories */
+.yak-cat-card{margin:0 0 18px;padding:18px;border:1px solid #2b2e36;border-radius:16px;background:#121318}
+.yak-cat-head{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:12px}
+.yak-cat-head h3{margin:0 0 4px}.yak-cat-sub{opacity:.72;font-size:13px}
+#yakAddCatBtn{background:#ff7900;color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:800;cursor:pointer}
+.yak-cat-row{display:grid;grid-template-columns:32px minmax(160px,1fr) 100px 42px 42px 72px 60px;gap:8px;align-items:center;padding:9px 0;border-top:1px solid #292b31}
+.yak-cat-row button{border:1px solid #343740;background:#1b1d23;color:#fff;border-radius:8px;padding:7px;cursor:pointer}
+.yak-cat-count{opacity:.7;font-size:12px}.yak-cat-order{opacity:.55;text-align:center}.yak-cat-uncat{grid-template-columns:32px 1fr 100px}
+.yak-cat-product-field{display:flex;flex-direction:column;gap:6px;min-width:220px}.yak-cat-product-field select{padding:10px;border-radius:10px}
+.yak-front-cats{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;padding:10px;border:1px solid #2a2d34;background:#121318;border-radius:14px;position:sticky;top:0;z-index:5}
+.yak-front-cats button{border:1px solid #3a3d45;background:#1a1c22;color:#fff;padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:700}
+.yak-front-cats button.active{background:#ff7900;border-color:#ff7900;color:#fff}
+@media(max-width:760px){.yak-cat-row{grid-template-columns:28px 1fr 80px;}.yak-cat-row button{grid-row:2}.yak-front-cats{position:static}}
+
+
+/* YAK POS V5.3.1 - visible category field in product form */
+.yak-category-field-531{
+  display:flex;flex-direction:column;gap:6px;
+  min-width:220px;margin:8px 0;
+}
+.yak-category-field-531 label{font-weight:800}
+.yak-category-field-531 select{
+  width:100%;padding:11px 12px;border-radius:10px;
+  border:1px solid #3a3d45;background:#181a20;color:#fff;
+}
+.yak-category-field-531 small{opacity:.65}
+#yakProductCategory{display:none!important}
+
+
+/* YAK POS V5.4 Category System */
+.yak540-card{margin:0 0 18px;padding:18px;border:1px solid #2b2e36;border-radius:16px;background:#121318}
+.yak540-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.yak540-head h3{margin:0 0 4px}.yak540-sub{opacity:.7;font-size:13px}
+#yak540AddCat{background:#ff7900;color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:800;cursor:pointer}
+.yak540-row{display:grid;grid-template-columns:32px minmax(150px,1fr) 100px 42px 42px 72px 58px;gap:8px;align-items:center;padding:9px 0;border-top:1px solid #292b31}
+.yak540-row button{border:1px solid #343740;background:#1b1d23;color:#fff;border-radius:8px;padding:7px;cursor:pointer}
+.yak540-count{opacity:.7;font-size:12px}.yak540-num{text-align:center;opacity:.55}.yak540-uncat{grid-template-columns:32px 1fr 100px}
+.yak540-product-field{display:flex;flex-direction:column;gap:6px;margin:8px 0;min-width:220px}
+.yak540-product-field label{font-weight:800}
+.yak540-product-field select{width:100%;padding:11px 12px;border:1px solid #3a3d45;border-radius:10px;background:#181a20;color:#fff}
+#yakProductCategory,#yakCategoryField531{display:none!important}
+.yak540-frontcats{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;padding:10px;border:1px solid #2a2d34;background:#121318;border-radius:14px}
+.yak540-frontcats button{border:1px solid #3a3d45;background:#1a1c22;color:#fff;padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:700}
+.yak540-frontcats button.active{background:#ff7900;border-color:#ff7900}
+@media(max-width:760px){.yak540-row{grid-template-columns:28px 1fr 80px}.yak540-row button{grid-row:2}}
+
+
+/* YAK POS V5.4.2 Category Manager */
+.yak542-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.yak542-manage-btn{border:1px solid #ff7900!important;color:#ffb15f!important}
+.yak542-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;align-items:center;justify-content:center;padding:20px}
+.yak542-modal.hidden{display:none!important}
+.yak542-dialog{width:min(760px,96vw);max-height:88vh;overflow:auto;background:#15161b;border:1px solid #343741;border-radius:18px;padding:20px;box-shadow:0 24px 80px rgba(0,0,0,.55)}
+.yak542-dialog-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.yak542-dialog-head h2{margin:0 0 5px}.yak542-dialog-head p{margin:0;opacity:.7}
+.yak542-addbox{display:grid;grid-template-columns:1fr auto;gap:10px;margin:18px 0}
+.yak542-addbox input{padding:12px 14px;border:1px solid #3a3d46;background:#0f1014;color:#fff;border-radius:10px}
+.yak542-list{display:flex;flex-direction:column;gap:8px}
+.yak542-row{display:grid;grid-template-columns:34px minmax(160px,1fr) 42px 42px 92px 72px;gap:8px;align-items:center;padding:10px;border:1px solid #2d3038;border-radius:11px;background:#101116}
+.yak542-index{text-align:center;opacity:.55}.yak542-name{display:flex;flex-direction:column;gap:3px}.yak542-name small{opacity:.65}
+.yak542-row button{border:1px solid #383b44;background:#20222a;color:#fff;border-radius:8px;padding:8px;cursor:pointer}
+.yak542-row button.danger{background:#522126;border-color:#713038}
+.yak542-empty{text-align:center;padding:30px;border:1px dashed #373a44;border-radius:12px;opacity:.75}
+.yak542-product-cat{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.yak542-product-cat label{font-weight:800}
+.yak542-product-cat select{width:100%;padding:11px 12px;border:1px solid #3a3d45;border-radius:10px;background:#181a20;color:#fff}
+#yak540ProductCatWrap,#yakCategoryField531,#yakProductCategory{display:none!important}
+@media(max-width:720px){
+  .yak542-addbox{grid-template-columns:1fr}
+  .yak542-row{grid-template-columns:30px 1fr 42px 42px}
+  .yak542-row button[data-act="edit"],.yak542-row button[data-act="delete"]{grid-row:2}
+}
+
+
+/* YAK POS V5.4.3 - category assignment for existing products */
+.yak543-cat-head{min-width:150px}
+.yak543-cat-cell{min-width:150px}
+.yak543-row-cat{
+  width:100%;min-width:135px;padding:7px 9px;border-radius:8px;
+  border:1px solid #3a3d45;background:#17191f;color:#fff;
+}
+.yak543-filter-wrap{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}
+.yak543-filter-wrap label{font-weight:800}
+#yak543AdminFilter{
+  width:100%;padding:11px 12px;border:1px solid #3a3d45;
+  border-radius:10px;background:#181a20;color:#fff
+}
+.yak543-front-cats{
+  display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;padding:10px;
+  border:1px solid #2a2d34;background:#121318;border-radius:14px
+}
+.yak543-front-cats button{
+  border:1px solid #3a3d45;background:#1a1c22;color:#fff;
+  padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:700
+}
+.yak543-front-cats button.active{background:#ff7900;border-color:#ff7900;color:#fff}
+
+
+/* YAK POS V5.4.4 audited category fixes */
+.yak544-edit-cat{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.yak544-edit-cat label{font-weight:800}
+.yak544-edit-cat select{
+  width:100%;padding:10px 12px;border:1px solid #3a3d45;
+  border-radius:10px;background:#181a20;color:#fff
+}
