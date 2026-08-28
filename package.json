@@ -1,6 +1,6 @@
 {
   "name": "yak-pos-v4",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -12,7 +12,7 @@
   },
   "build": {
     "appId": "com.yak.pos",
-    "productName": "YAK POS V5.0 Online Ready",
+    "productName": "YAK POS V5.1 Auto Cloud",
     "files": [
       "index.html",
       "style.css",
@@ -25,7 +25,9 @@
       "sidebar-v469.js",
       "online-v500.js",
       "supabase-schema.sql",
-      "ONLINE_SETUP_TH.txt"
+      "ONLINE_SETUP_TH.txt",
+      "online-v510.js",
+      "README_V5_1_AUTO_CLOUD.txt"
     ],
     "win": {
       "target": [
@@ -33,5 +35,5 @@
       ]
     }
   },
-  "productName": "YAK POS V5.0 Online Ready"
+  "productName": "YAK POS V5.1 Auto Cloud"
 }

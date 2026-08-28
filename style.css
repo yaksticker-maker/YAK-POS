@@ -1266,3 +1266,19 @@ body.yak-backoffice [data-backpage-panel].yak-page-active{
 }
 
 .online500-head{display:flex;justify-content:space-between;gap:12px}.online500-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.online500-grid label{display:flex;flex-direction:column;gap:6px;color:#aaa;font-size:12px}.online500-actions{display:flex;gap:8px;flex-wrap:wrap}.online500-info{margin-top:12px;padding:11px;background:#111116;border-radius:9px;color:#aaa}body.yak-backoffice #online500Panel.yak-page-active{display:block!important}@media(max-width:700px){.online500-grid{grid-template-columns:1fr}}
+
+/* V5.1 Auto Cloud */
+.online510-flags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.online510-flags span{
+  font-size:11px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#14351f;
+  color:#91e7aa;
+  border:1px solid #285d37;
+}

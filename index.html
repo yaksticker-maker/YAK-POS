@@ -293,7 +293,7 @@
   <div class="panel">
     <div class="panel-head">
       <div>
-        <h2>จัดการสินค้า / สต๊อก / ต้นทุน <span class="actual-v-badge">V5.0</span></h2>
+        <h2>จัดการสินค้า / สต๊อก / ต้นทุน <span class="actual-v-badge">V5.1</span></h2>
         <p>ตั้งราคาขาย ต้นทุน จำนวนคงเหลือ และจุดแจ้งเตือนเติมสินค้า • ถ้าเชื่อมวัตถุดิบแล้ว ระบบจะใช้สต๊อกวัตถุดิบเป็นหลัก</p>
       </div>
       <button id="prod63AddBtn" class="btn primary" type="button" onclick="prod63OpenAdd()">+ เพิ่มสินค้า</button>
@@ -423,7 +423,7 @@
     <div class="panel">
       <div class="panel-head actual-report-head">
         <div>
-          <h2>รายงานยอดขายและกำไร <span class="actual-v-badge">V5.0</span></h2>
+          <h2>รายงานยอดขายและกำไร <span class="actual-v-badge">V5.1</span></h2>
           <p>เลือกวันที่ เดือน หรือช่วงวันที่ได้โดยตรง</p>
         </div>
         <div class="actual-report-actions">
@@ -656,7 +656,7 @@
 <section class="panel backoffice-only" id="advancedReports" data-backpage-panel="reports">
  <div class="report28">
   <div class="report28-head">
-   <div><h2>รายงาน <span>V5.0</span></h2><p>รายงานยอดขายแบบ Real-time และย้อนหลัง</p></div>
+   <div><h2>รายงาน <span>V5.1</span></h2><p>รายงานยอดขายแบบ Real-time และย้อนหลัง</p></div>
    <div class="report28-actions">
     <button onclick="r28SavePdf()">📄 บันทึก PDF</button>
     <button onclick="r28Print()">🖨 พิมพ์รายงาน</button>
@@ -741,7 +741,7 @@
 <section id="receiptDesignerPanel" class="card backoffice-only receipt60-panel" data-backpage-panel="receipt">
   <div class="receipt60-head">
     <div>
-      <h2>ตกแต่งสลิป / หัวบิล <span class="actual-v-badge">V5.0</span></h2>
+      <h2>ตกแต่งสลิป / หัวบิล <span class="actual-v-badge">V5.1</span></h2>
       <p class="muted">ออกแบบหัวสลิปแล้วดูตัวอย่างก่อนบันทึก ค่าที่บันทึกจะใช้กับสลิปขายจริง</p>
     </div>
     <button id="rd60SaveBtn" type="button" class="btn primary">💾 บันทึกการตกแต่ง</button>
@@ -833,7 +833,8 @@
 
 
 
-<section id="online500Panel" class="card backoffice-only hidden" data-backpage-panel="online"><div class="online500-head"><div><h2>☁️ YAK POS Online</h2><p class="muted">เชื่อม Cloud เพื่อให้ทุกเครื่องใช้ข้อมูลชุดเดียวกัน</p></div><span id="online500Status" class="badge orange">Offline</span></div><div class="online500-grid"><label>Supabase Project URL<input id="online500Url" placeholder="https://xxxxx.supabase.co"></label><label>Publishable / Anon Key<input id="online500Key" type="password" placeholder="sb_publishable_..."></label></div><div class="online500-actions"><button class="btn primary" onclick="YAK_ONLINE_500.connectFromForm()">เชื่อมต่อ Online</button><button class="btn" onclick="YAK_ONLINE_500.pushLocal()">อัปโหลดข้อมูลเครื่องนี้</button><button class="btn" onclick="YAK_ONLINE_500.pullCloud()">ดึงข้อมูลจาก Cloud</button><button class="btn ghost" onclick="YAK_ONLINE_500.disconnect()">ใช้ Offline</button></div><div id="online500Info" class="online500-info">ข้อมูล V4.4.69 เดิมยังอยู่ในเครื่อง</div></section>
+<section id="online500Panel" class="card backoffice-only hidden" data-backpage-panel="online"><div class="online500-head"><div><h2>☁️ YAK POS Online</h2><p class="muted">เชื่อม Cloud เพื่อให้ทุกเครื่องใช้ข้อมูลชุดเดียวกัน</p></div><span id="online500Status" class="badge orange">Offline</span></div><div class="online500-grid"><label>Supabase Project URL<input id="online500Url" placeholder="https://xxxxx.supabase.co"></label><label>Publishable / Anon Key<input id="online500Key" type="password" placeholder="sb_publishable_..."></label></div><div class="online500-actions"><button class="btn primary" onclick="YAK_ONLINE_510.connectFromForm()">เชื่อมต่อ Online</button><button class="btn" onclick="YAK_ONLINE_510.pushLocal()">อัปโหลดข้อมูลเครื่องนี้</button><button class="btn" onclick="YAK_ONLINE_510.pullCloud()">ดึงข้อมูลจาก Cloud</button><button class="btn ghost" onclick="YAK_ONLINE_510.disconnect()">ใช้ Offline</button><button class="btn" onclick="YAK_ONLINE_510.copySetup()">คัดลอกการตั้งค่า Cloud</button>
+<button class="btn" onclick="YAK_ONLINE_510.importSetup()">นำเข้าการตั้งค่า Cloud</button></div><div class="online510-flags"><span>✓ Auto Connect</span><span>✓ Auto Pull</span><span>✓ Auto Save</span></div><div id="online500Info" class="online500-info">ข้อมูล V4.4.69 เดิมยังอยู่ในเครื่อง</div></section>
 
 <nav id="yakBackNav" class="backoffice-only yak-back-nav">
   <button type="button" class="yak-back-tab active" data-backpage="products">สินค้า</button>
@@ -842,8 +843,8 @@
   <button type="button" class="yak-back-tab" data-backpage="people">พนักงาน / สาขา</button>
   <button type="button" class="yak-back-tab" data-backpage="receipt">ตกแต่งสลิป</button>
   <button type="button" class="yak-back-tab" data-backpage="settings">ตั้งค่า</button>
-  <button type="button" class="yak-back-tab" data-backpage="online" onclick="YAK_ONLINE_500.openPage(event)">☁️ Online</button>
-  <div class="yak-version-chip">YAK POS V5.0</div>
+  <button type="button" class="yak-back-tab" data-backpage="online" onclick="YAK_ONLINE_510.openPage(event)">☁️ Online</button>
+  <div class="yak-version-chip">YAK POS V5.1</div>
 </nav>
 </main>
 
@@ -924,6 +925,6 @@
   </div>
 </div>
 
-<script src="online-v500.js"></script>
+<script src="online-v510.js"></script>
 </body>
 </html>
