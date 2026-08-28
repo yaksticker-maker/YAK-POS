@@ -1,0 +1,18 @@
+YAK POS V4.4.2 START FIX
+
+IMPORTANT:
+Do not use Thai-named BAT files.
+
+FIRST TIME IN THIS NEW FOLDER:
+1. Double-click INSTALL_FIRST.bat
+2. Wait until INSTALL COMPLETE
+3. Press any key
+
+NORMAL USE:
+Double-click START_YAK_POS.bat
+
+If it does not open:
+Double-click START_YAK_POS_DEBUG.bat and take a photo of the error.
+
+Printer:
+Select Windows printer > 58/80 mm > Test > Save.

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YAK POS</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="yak-intro">
+  <div id="app">
+    <header class="topbar">
+      <div>
+        <h1>YAK POS</h1>
+        <p id="branchLabel">ระบบหน้าร้านและหลังร้าน</p>
+      </div>
+      <div id="sessionBox" class="session hidden">
+        <span id="sessionText"></span>
+        <button class="btn ghost" onclick="logout()">ออกจากระบบ</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="homeView" class="view active">
+        <div class="hero">
+          <div>
+            <h2>เลือกส่วนที่ต้องการใช้งาน</h2>
+            <p>หน้าร้านใช้รหัสพนักงานและ PIN • หลังร้านใช้รหัส Owner / Manager และ PIN</p>
+          </div>
+        </div>
+
+        <div class="entry-grid">
+          <button class="entry-card storefront" type="button" onclick="openFrontStore()">
+            <div class="icon">🛒</div>
+            <h3>หน้าร้าน</h3><small class="entry-role-label">สำหรับพนักงานขาย</small>
+            <p>ขายสินค้า • รับชำระเงิน • ปิดบิล • ดูยอดกะ</p>
+          </button>
+
+          <button class="entry-card backoffice" type="button" onclick="openBackOfficeLogin()">
+            <div class="icon">⚙️</div>
+            <h3>หลังร้าน</h3><small class="entry-role-label">สำหรับ Owner / Manager</small>
+            <p>บริหารสาขา • พนักงาน • สินค้า • วัตถุดิบ • รายงาน</p>
+          </button>
+        </div>
+
+
+        
+        
+
+<div class="printer-check-card simple-printer-card">
+  <div class="simple-printer-title">
+    <div class="printer-icon">🖨️</div>
+    <div>
+      <h3>เครื่องพิมพ์ใบเสร็จ</h3>
+      <p id="printerDeviceName">เลือกเครื่องพิมพ์ที่ต้องการใช้</p>
+    </div>
+  </div>
+
+  <div class="simple-printer-controls">
+    <select id="windowsPrinterSelect">
+      <option value="">กำลังค้นหาเครื่องพิมพ์...</option>
+    </select>
+
+    <select id="receiptPaperSize">
+      <option value="58">58 mm</option>
+      <option value="80">80 mm</option>
+    </select>
+
+    <button class="btn primary" onclick="desktopTestPrinter()">พิมพ์ทดสอบ</button>
+    <button class="btn success" onclick="saveWindowsPrinter()">บันทึก</button>
+  </div>
+
+  <div class="simple-printer-status">
+    <span id="printerStatusBadge" class="printer-status not-tested">● ยังไม่ได้บันทึก</span>
+    <strong id="savedPrinterName">—</strong>
+    <span id="printerConnectionState">กำลังค้นหา...</span>
+    <span id="printerLastTest">—</span>
+  </div>
+</div>
+
+
+
+
+        <div class="demo-box">
+          <strong>บัญชีทดลอง</strong>
+          <div>Owner: <code>EMP001</code> / PIN <code>1234</code></div>
+          <div>Staff: <code>EMP002</code> / PIN <code>2222</code></div>
+        </div>
+      </section>
+
+      <section id="loginView" class="view">
+        <div class="panel narrow">
+          <div class="panel-head">
+            <div>
+              <h2 id="loginTitle">เข้าสู่ระบบ</h2>
+              <p id="loginSubtitle"></p>
+            </div>
+            <button class="btn ghost" onclick="goHome()">← กลับ</button>
+          </div>
+
+          <label>สาขา</label>
+          <select id="loginBranch"></select>
+
+          <label>รหัสพนักงาน</label>
+          <input id="loginEmp" type="text" placeholder="เช่น EMP001" autocomplete="off" />
+
+          <label>PIN</label>
+          <input id="loginPin" type="password" maxlength="8" placeholder="กรอก PIN" inputmode="numeric" />
+
+          <button class="btn primary full" onclick="attemptLogin()">เข้าสู่ระบบ</button>
+          <p id="loginError" class="error"></p>
+        </div>
+      </section>
+
+      <section id="frontView" class="view">
+        <div class="front-layout">
+          <div class="panel products-panel">
+            <div class="front-daily-summary">
+              <div class="mini-stat"><span>ยอดขายวันนี้</span><strong id="frontTodaySales">฿0.00</strong></div>
+              <div class="mini-stat"><span>จำนวนบิลวันนี้</span><strong id="frontTodayBills">0</strong></div>
+              <div class="mini-stat"><span>เงินสดวันนี้</span><strong id="frontTodayCash">฿0.00</strong></div>
+              <div class="mini-stat"><span>QR/บัตรวันนี้</span><strong id="frontTodayNonCash">฿0.00</strong></div>
+            </div>
+            <div class="front-summary-actions">
+              <button class="btn primary" onclick="showDailyIncomePreview()">🧾 พิมพ์สรุปรายรับวันนี้</button>
+            </div>
+            <div id="frontStockAlerts" class="stock-alert-box hidden"></div>
+            <div class="panel-head">
+              <div>
+                <h2>ขายหน้าร้าน</h2>
+                <p>เลือกสินค้าเพื่อเพิ่มลงบิล • สต๊อกจะถูกตัดอัตโนมัติเมื่อปิดบิล</p>
+              </div>
+              <input id="productSearch" class="search" placeholder="ค้นหาสินค้า..." oninput="renderProducts()" />
+            </div>
+            <div id="productGrid" class="product-grid"></div>
+          </div>
+
+          <div class="panel cart-panel">
+            <div class="panel-head">
+              <div>
+                <h2>บิลปัจจุบัน</h2>
+                <p id="cartBranch"></p>
+              </div>
+              <button class="btn danger-outline" onclick="clearCart()">ล้างบิล</button>
+            </div>
+
+            <div id="cartItems" class="cart-items"></div>
+
+            <div class="summary">
+              <div><span>ยอดรวม</span><strong id="subtotal">฿0.00</strong></div>
+              <div class="discount-row">
+                <span>ส่วนลด</span>
+                <input id="discountInput" type="number" min="0" value="0" oninput="renderCart()" />
+              </div>
+              <div class="grand"><span>สุทธิ</span><strong id="grandTotal">฿0.00</strong></div>
+            </div>
+
+            <label>วิธีชำระ</label>
+            <div class="pay-grid">
+              <button class="pay active" data-pay="cash" onclick="selectPay(this)">เงินสด</button>
+              <button class="pay" data-pay="qr" onclick="selectPay(this)">QR / โอน</button>
+              <button class="pay" data-pay="card" onclick="selectPay(this)">บัตร</button>
+            </div>
+
+            <div id="cashPaymentBox" class="cash-payment-box">
+              <div class="cash-row">
+                <label>ลูกค้าให้เงินสด</label>
+                <input id="cashReceived" type="text" inputmode="decimal" placeholder="0.00" oninput="sanitizeCashInput();calculateChange()">
+              </div>
+
+              <div class="touch-keypad">
+                <button type="button" onclick="cashKey('7')">7</button>
+                <button type="button" onclick="cashKey('8')">8</button>
+                <button type="button" onclick="cashKey('9')">9</button>
+                <button type="button" class="key-action" onclick="cashBackspace()">⌫</button>
+
+                <button type="button" onclick="cashKey('4')">4</button>
+                <button type="button" onclick="cashKey('5')">5</button>
+                <button type="button" onclick="cashKey('6')">6</button>
+                <button type="button" class="key-clear" onclick="cashClear()">C</button>
+
+                <button type="button" onclick="cashKey('1')">1</button>
+                <button type="button" onclick="cashKey('2')">2</button>
+                <button type="button" onclick="cashKey('3')">3</button>
+                <button type="button" class="key-exact" onclick="setExactCash()">พอดี</button>
+
+                <button type="button" onclick="cashKey('0')">0</button>
+                <button type="button" onclick="cashKey('00')">00</button>
+                <button type="button" onclick="cashKey('.')">.</button>
+                <button type="button" class="key-enter" onclick="calculateChange()">ตกลง</button>
+              </div>
+
+              <div class="quick-cash">
+                <button onclick="setCashReceived(20)">20</button>
+                <button onclick="setCashReceived(50)">50</button>
+                <button onclick="setCashReceived(100)">100</button>
+                <button onclick="setCashReceived(500)">500</button>
+                <button onclick="setCashReceived(1000)">1000</button>
+                <button onclick="setExactCash()">พอดี</button>
+              </div>
+
+              <div class="change-display change-display-big">
+                <div class="change-label-wrap">
+                  <span class="change-label">ต้องทอน</span>
+                  <small>ตรวจสอบก่อนส่งเงินให้ลูกค้า</small>
+                </div>
+                <strong id="changeAmount">฿0.00</strong>
+              </div>
+            </div>
+
+            <div class="drawer-actions">
+              
+              
+            </div>
+
+            
+            <button class="btn success full big" onclick="checkout()">ชำระเงิน / ปิดบิล</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="backView" class="view">
+        <div class="back-layout">
+          <aside class="sidebar" id="yakSidebar69">
+            <button type="button" class="side-btn active" onclick="YAK_SIDEBAR_469.open('dashboard',this)">📊 Dashboard</button>
+            <button type="button" class="side-btn" onclick="YAK_SIDEBAR_469.open('branches',this)">🏪 สาขา</button>
+            <button type="button" class="side-btn" onclick="YAK_SIDEBAR_469.open('employees',this)">👥 พนักงาน</button>
+            <button type="button" class="side-btn" onclick="YAK_SIDEBAR_469.open('products',this)">📦 สินค้า</button>
+            <button type="button" class="side-btn" onclick="YAK_SIDEBAR_469.open('sales',this)">🧾 ยอดขาย</button>
+            <button type="button" class="side-btn" onclick="YAK_SIDEBAR_469.open('reports',this)">📈 รายงาน</button>
+            <button type="button" class="side-btn" onclick="YAK_SIDEBAR_469.open('receipt',this)">🧾 ตกแต่งสลิป</button>
+          </aside>
+
+          <div class="content-area">
+            <div id="tab-dashboard" class="back-tab active">
+              <div id="backStockAlerts" class="stock-alert-box hidden"></div>
+              <div class="stats-grid">
+                <div class="stat"><span>ยอดขายวันนี้</span><strong id="todaySales">฿0</strong></div>
+                <div class="stat"><span>กำไรวันนี้</span><strong id="todayProfit">฿0</strong></div>
+                <div class="stat"><span>จำนวนบิลวันนี้</span><strong id="todayBills">0</strong></div>
+                <div class="stat"><span>พนักงาน</span><strong id="empCount">0</strong></div>
+                <div class="stat"><span>สินค้าใกล้หมด</span><strong id="lowStockCount">0</strong></div>
+                <div class="stat"><span>สาขา</span><strong id="branchCount">0</strong></div>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><h2>ยอดขายแยกสาขา</h2></div>
+                <div id="branchSalesTable"></div>
+              </div>
+            </div>
+
+            <div id="tab-branches" class="back-tab">
+              <div class="panel">
+                <div class="panel-head">
+                  <div><h2>จัดการสาขา</h2><p>Owner เพิ่มและเปิด/ปิดสาขาได้</p></div>
+                  <button id="br59AddBtn" class="btn primary" type="button">+ เพิ่มสาขา</button>
+                </div>
+                <div id="branchForm" class="inline-form hidden">
+                  <input id="branchCode" placeholder="รหัส เช่น YAK-002">
+                  <input id="branchName" placeholder="ชื่อสาขา">
+                  <button id="br59SaveBtn" class="btn success" type="button">บันทึก</button>
+                  <button id="br59CancelBtn" class="btn ghost" type="button">ยกเลิก</button>
+                </div>
+                <div id="branchesTable"></div>
+              </div>
+            </div>
+
+            <div id="tab-employees" class="back-tab">
+              <div class="panel">
+                <div class="panel-head">
+                  <div><h2>จัดการพนักงาน</h2><p>กำหนดสาขา รหัส PIN และสิทธิ์</p></div>
+                  <button id="emp54AddBtn" class="btn primary" type="button">+ เพิ่มพนักงาน</button>
+                </div>
+                <div id="employeeForm" class="inline-form employee-form hidden">
+                  <div id="emp54FormTitle" class="emp54-form-title">เพิ่มพนักงานใหม่</div>
+                  <input id="empCode" placeholder="รหัส เช่น EMP003">
+                  <input id="empName" placeholder="ชื่อพนักงาน">
+                  <input id="empPin" placeholder="PIN" maxlength="8">
+                  <select id="empRole">
+                    <option value="staff">Staff</option>
+                    <option value="manager">Manager</option>
+                    <option value="owner">Owner</option>
+                  </select>
+                  <select id="empBranch"></select>
+                  <button id="emp54SaveBtn" class="btn success" type="button">บันทึก</button>
+                  <button id="emp54CancelBtn" class="btn ghost" type="button">ยกเลิก</button>
+                </div>
+                <div id="employeesTable"></div>
+              </div>
+            </div>
+
+            
+<div id="tab-products" class="back-tab">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>จัดการสินค้า / สต๊อก / ต้นทุน <span class="actual-v-badge">V5.0</span></h2>
+        <p>ตั้งราคาขาย ต้นทุน จำนวนคงเหลือ และจุดแจ้งเตือนเติมสินค้า • ถ้าเชื่อมวัตถุดิบแล้ว ระบบจะใช้สต๊อกวัตถุดิบเป็นหลัก</p>
+      </div>
+      <button id="prod63AddBtn" class="btn primary" type="button" onclick="prod63OpenAdd()">+ เพิ่มสินค้า</button>
+    </div>
+    <div id="productForm" class="product-admin-form hidden">
+      <div id="prod63FormTitle" class="prod62-form-title">เพิ่มสินค้าใหม่</div>
+      <input id="newProductName" placeholder="ชื่อสินค้า/บริการ">
+      <input id="newProductPrice" type="number" min="0" step="0.01" placeholder="ราคาขาย">
+      <input id="newProductCost" type="number" min="0" step="0.01" placeholder="ต้นทุน/ชิ้น">
+      <input id="newProductStock" type="number" min="0" step="0.01" placeholder="จำนวนสต๊อก">
+      <input id="newProductMinStock" type="number" min="0" step="0.01" placeholder="แจ้งเตือนเมื่อเหลือ">
+      <select id="newProductTrackStock">
+        <option value="yes">ตัดสต๊อก</option>
+        <option value="no">ไม่ตัดสต๊อก (งานบริการ)</option>
+      </select>
+      <label class="file-label">รูปสินค้า
+        <input id="newProductImage" type="file" accept="image/*">
+      </label>
+      <div id="prod63ImageInfo" class="prod62-image-info">ยังไม่ได้เลือกรูปใหม่</div>
+      <button id="prod63SaveBtn" class="btn success" type="button" onclick="prod63Save()">บันทึก</button>
+      <button id="prod63CancelBtn" class="btn ghost" type="button" onclick="prod63Close()">ยกเลิก</button>
+    </div>
+    <div id="productsTable"></div>
+<div id="m41ActiveOverview" class="m41-overview">
+  <div class="m41-overview-head">
+    <div>
+      <h3>ระบบวัตถุดิบที่กำลังทำงาน</h3>
+      <p>แสดงการเชื่อมที่ใช้งานอยู่แบบทันที</p>
+    </div>
+    <span id="m41ActiveCount" class="m41-count">0 การเชื่อม</span>
+  </div>
+  <div id="m41ActiveList"></div>
+</div>
+
+  </div>
+
+  <div class="panel material33-panel">
+    <div class="panel-head">
+      <div>
+        <h2>วัตถุดิบที่ใช้ในร้าน</h2>
+        <p>เพิ่มวัตถุดิบเองได้ เช่น กระดาษ A4, A3, สติ๊กเกอร์, หมึก, เคลือบ, ห่วง, ฟิล์ม ฯลฯ • แก้ไขหรือลบรายการภายหลังได้</p>
+      </div>
+      <button type="button" class="btn primary" onclick="m33ShowAdd()">+ เพิ่มวัตถุดิบ</button>
+    </div>
+
+    <div id="m33AddForm" class="m33-form hidden">
+      <label>ชื่อวัตถุดิบ
+        <input id="m33Name" placeholder="เช่น กระดาษ A4">
+      </label>
+      <label>หน่วย
+        <input id="m33Unit" placeholder="เช่น แผ่น / เมตร / ml / กรัม">
+      </label>
+      <label>จำนวนคงเหลือ
+        <input id="m33Stock" type="number" min="0" step="0.01" placeholder="0">
+      </label>
+      <label>เตือนเมื่อเหลือ
+        <input id="m33Min" type="number" min="0" step="0.01" placeholder="0">
+      </label>
+      <div class="m33-form-actions">
+        <button type="button" class="btn success" onclick="m33SaveMaterial()">บันทึกวัตถุดิบ</button>
+        <button type="button" class="btn ghost" onclick="m33HideAdd()">ยกเลิก</button>
+      </div>
+    </div>
+
+    <div id="m33MaterialSummary" class="m33-summary"></div>
+    <div id="m40MaterialManager"></div>
+    <div id="m33MaterialsTable"></div>
+  </div>
+
+  <div class="panel material33-panel">
+    <div class="panel-head">
+      <div>
+        <h2>เชื่อมสินค้า ↔ วัตถุดิบ</h2>
+        <p>กำหนดเองว่า “ขายสินค้า 1 หน่วย ใช้วัตถุดิบกี่หน่วย” เมื่อชำระเงินสำเร็จ ระบบจะตัดวัตถุดิบให้อัตโนมัติ</p>
+      </div>
+    </div>
+
+    <div class="m33-link-builder">
+      <label>1. เลือกสินค้าที่ขาย
+        <div class="m35-dropdown">
+          <button type="button" id="m35ProductBtn" class="m35-drop-btn" onclick="m35ToggleDropdown('product')">-- เลือกสินค้า -- <span>▾</span></button>
+          <input type="hidden" id="m33Product">
+          <div id="m35ProductMenu" class="m35-drop-menu hidden"></div>
+        </div>
+      </label>
+      <label>2. เลือกวัตถุดิบ
+        <div class="m35-dropdown">
+          <button type="button" id="m35MaterialBtn" class="m35-drop-btn" onclick="m35ToggleDropdown('material')">-- เลือกวัตถุดิบ -- <span>▾</span></button>
+          <input type="hidden" id="m33Material">
+          <div id="m35MaterialMenu" class="m35-drop-menu hidden"></div>
+        </div>
+      </label>
+      <label>3. ใช้ต่อการขาย 1 หน่วย
+        <input id="m33Qty" type="number" min="0.0001" step="0.01" placeholder="เช่น 1">
+      </label>
+      <button type="button" class="btn primary" onclick="m33SaveLink()">+ เชื่อมวัตถุดิบ</button>
+    </div>
+
+    <div class="m33-example">
+      ตัวอย่าง: <b>ถ่ายเอกสาร A4</b> → กระดาษ A4 <b>1 แผ่น</b> ต่อขาย 1 หน่วย  
+      ถ้าขาย 20 หน่วย ระบบจะตัดกระดาษ A4 จำนวน 20 แผ่นหลังชำระสำเร็จ
+    </div>
+
+    <div id="m33RecipeView"></div>
+    <div class="m33-all-recipes">
+      <h3>สูตรวัตถุดิบของสินค้าทั้งหมด</h3>
+      <div id="m40LinkSummary"></div>
+      <div id="m33AllRecipes"></div>
+    </div>
+  </div>
+</div>
+
+
+            <div id="tab-sales" class="back-tab">
+              <div class="panel">
+                <div class="panel-head">
+                  <div><h2>ประวัติยอดขาย</h2><p>บิลล่าสุดทุกสาขา</p></div>
+                  <button class="btn danger-outline" onclick="clearSales()">ล้างข้อมูลทดลอง</button>
+                </div>
+                <div id="salesTable"></div>
+              </div>
+            </div>
+            
+<div id="tab-reports" class="back-tab">
+  <div class="report-controls actual-report-v4430">
+
+    <div class="panel">
+      <div class="panel-head actual-report-head">
+        <div>
+          <h2>รายงานยอดขายและกำไร <span class="actual-v-badge">V5.0</span></h2>
+          <p>เลือกวันที่ เดือน หรือช่วงวันที่ได้โดยตรง</p>
+        </div>
+        <div class="actual-report-actions">
+          <button type="button" class="btn ghost" data-r32-action="pdf">📄 PDF</button>
+          <button type="button" class="btn primary" data-r32-action="print">🖨 พิมพ์</button>
+        </div>
+      </div>
+
+      <div class="actual-filter-card">
+        <div class="actual-filter-tabs">
+          <button id="actualDayTab" class="actual-filter-tab active" data-report-mode="day" type="button">📅 เลือกวันที่</button>
+          <button id="actualMonthTab" class="actual-filter-tab" data-report-mode="month" type="button">🗓 เลือกเดือน</button>
+          <button id="actualRangeTab" class="actual-filter-tab" data-report-mode="range" type="button">↔ ช่วงวันที่</button>
+        </div>
+
+        <div id="actualDayPanel" class="actual-filter-panel">
+          <label>
+            วันที่
+            <input id="actualReportDay" type="date" onchange="actualRenderReports()">
+          </label>
+          <button type="button" class="btn primary" data-r32-action="render">ดูรายงานวันที่นี้</button>
+        </div>
+
+        <div id="actualMonthPanel" class="actual-filter-panel hidden">
+          <label>
+            เดือน
+            <input id="actualReportMonth" type="month" onchange="actualRenderReports()">
+          </label>
+          <button type="button" class="btn primary" data-r32-action="render">ดูรายงานเดือนนี้</button>
+        </div>
+
+        <div id="actualRangePanel" class="actual-filter-panel hidden">
+          <label>
+            ตั้งแต่วันที่
+            <input id="actualReportStart" type="date">
+          </label>
+          <div class="actual-arrow">→</div>
+          <label>
+            ถึงวันที่
+            <input id="actualReportEnd" type="date">
+          </label>
+          <button type="button" class="btn primary" data-r32-action="range">ดูช่วงนี้</button>
+        </div>
+
+        <div class="actual-filter-quick">
+          <button type="button" data-r32-action="preset-today">วันนี้</button>
+          <button type="button" data-r32-action="preset-yesterday">เมื่อวาน</button>
+          <button type="button" data-r32-action="preset-7days">7 วันล่าสุด</button>
+          <button type="button" data-r32-action="preset-month">เดือนนี้</button>
+          <button type="button" data-r32-action="preset-year">ปีนี้</button>
+        </div>
+
+        <div class="actual-to-now">
+          <label>
+            เริ่มจากวันที่
+            <input id="actualToNowStart" type="date">
+          </label>
+          <button type="button" data-r32-action="to-now">จากวันที่เลือก → ถึงปัจจุบัน</button>
+        </div>
+
+        <div class="actual-current-period">
+          ช่วงที่กำลังดู: <strong id="actualReportLabel">วันนี้</strong>
+          <span id="actualRealtimeText">กำลังอัปเดต...</span>
+        </div>
+      </div>
+
+      <div class="stats-grid report-stats">
+        <div class="stat"><span>ยอดขาย</span><strong id="reportRevenue">฿0</strong></div>
+        <div class="stat"><span>ต้นทุน</span><strong id="reportCost">฿0</strong></div>
+        <div class="stat"><span>กำไร</span><strong id="reportProfit">฿0</strong></div>
+        <div class="stat"><span>กำไร %</span><strong id="reportMargin">0%</strong></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>กราฟยอดขาย</h2><p id="actualChartSubtitle">แนวโน้มตามช่วงเวลาที่เลือก</p></div>
+      </div>
+      <canvas id="salesChart" height="100"></canvas>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>สัดส่วนการขายสินค้า</h2><p>เปอร์เซ็นต์จากยอดขายรวมในช่วงที่เลือก</p></div>
+      </div>
+      <div class="chart-two-col yak457-product-share">
+        <div class="yak457-pie-wrap">
+          <canvas id="productPie" width="280" height="280"></canvas>
+        </div>
+        <div id="productPercentTable" class="yak457-percent-table"></div>
+      </div>
+    </div>
+
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>🏆 อันดับสินค้าขายดี</h2><p>เรียงอันดับตามจำนวนสินค้าที่ขายได้ในช่วงเวลาที่เลือก</p></div>
+      </div>
+      <div id="r48TopProducts"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>📦 สินค้าที่ขายไป</h2><p>ชื่อสินค้า จำนวนที่ขาย และยอดขายรวมในช่วงเวลาที่เลือก</p></div>
+      </div>
+      <div id="r48SoldProducts"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>รายละเอียดบิล</h2><p>รายการขายในช่วงวันที่ที่เลือก</p></div>
+      </div>
+      <div id="actualReportBills"></div>
+    </div>
+
+  </div>
+</div>
+
+          </div>
+        </div>
+      </section>
+    
+
+<section class="panel backoffice-only" id="sharedStockPanel" data-backpage-panel="stock">
+  <div class="panel-head">
+    <div><h2>สต๊อกและการเชื่อมสินค้า</h2><p>คุณเป็นคนเลือกเองทั้งหมดว่าสินค้าไหนจะเชื่อมกับวัตถุดิบไหน และใช้กี่หน่วยต่อการขาย 1 หน่วย</p></div>
+    <button class="btn primary" onclick="showMaterialForm()">+ เพิ่มวัตถุดิบ</button>
+  </div>
+  <div id="materialForm" class="inline-form hidden">
+    <input id="materialName" placeholder="ชื่อวัตถุดิบ เช่น กระดาษ A4">
+    <input id="materialUnit" placeholder="หน่วย เช่น แผ่น">
+    <input id="materialStock" type="number" min="0" placeholder="จำนวนตั้งต้น">
+    <input id="materialMinStock" type="number" min="0" placeholder="แจ้งเตือนเมื่อเหลือ">
+    <button class="btn success" onclick="saveMaterial()">บันทึก</button>
+    <button class="btn ghost" onclick="hideMaterialForm()">ยกเลิก</button>
+  </div>
+  <div id="materialsTable"></div>
+
+  <hr class="section-separator">
+  
+<div class="stock-quick-tools">
+  <div class="stock-tool-head">
+    <div>
+      <h3>จัดการสต๊อกสินค้า</h3>
+      <p>เพิ่มสินค้าใหม่ หรือปรับจำนวนสินค้าเดิมได้ตลอด</p>
+    </div>
+    <button class="btn primary" onclick="showProductForm()">+ เพิ่มสินค้า</button>
+  </div>
+  <div id="stockProductManager" class="stock-product-manager"></div>
+</div>
+
+<h3>เชื่อมวัตถุดิบกับสินค้า</h3>
+  <div class="recipe-help">
+    <b>ตัวอย่าง:</b> สร้างวัตถุดิบ “กระดาษ A4” 500 แผ่น แล้วคุณสามารถเลือกเชื่อม
+    “ปริ้น A4 สี” = 1 แผ่น, “ปริ้น A4 ขาวดำ” = 1 แผ่น หรือสินค้าอื่นตามที่ต้องการ
+    ทุกตัวจะหักจากกระดาษ A4 กองเดียวกัน แต่ไม่มีสินค้าไหนถูกเชื่อมอัตโนมัติ
+  </div>
+  <div class="material-link-form">
+    <select id="linkProduct"></select>
+    <select id="linkMaterial"></select>
+    <input id="linkQty" type="number" min="0" step="0.01" placeholder="จำนวนที่ใช้ต่อขาย 1 หน่วย">
+    <button class="btn primary" onclick="saveMaterialLink()">+ เชื่อมตามที่เลือก</button>
+  </div>
+  
+
+<div class="material-create-box">
+  <h3>เพิ่มวัตถุดิบหลัก</h3>
+  <p>เช่น กระดาษ A4, กระดาษ A3, สติ๊กเกอร์, หมึก, ปกใส ฯลฯ</p>
+  <div class="material-create-grid">
+    <input id="quickMaterialName" placeholder="ชื่อวัตถุดิบ">
+    <input id="quickMaterialUnit" placeholder="หน่วย เช่น แผ่น / เมตร / ชิ้น">
+    <input id="quickMaterialStock" type="number" min="0" placeholder="จำนวนตั้งต้น">
+    <input id="quickMaterialMin" type="number" min="0" placeholder="เตือนเมื่อเหลือ">
+    <button class="btn primary" onclick="quickAddMaterial()">+ เพิ่มวัตถุดิบ</button>
+  </div>
+</div>
+
+
+<div id="materialDeductionRuleNote" class="material-rule-note">
+  <b>กฎการหักวัตถุดิบ:</b>
+  ระบบจะหักเฉพาะหลัง “ชำระเงินสำเร็จ” และหักตาม
+  <b>จำนวนสินค้าที่ขาย × จำนวนวัตถุดิบที่กำหนดต่อ 1 หน่วย</b>
+</div>
+
+<div class="easy-linker">
+  <div class="easy-step">
+    <span class="step-no">1</span>
+    <div><b>เลือกวัตถุดิบ</b><small>เช่น กระดาษ A4</small></div>
+  </div>
+  <select id="easyMaterial" onchange="renderEasyProductChoices()"></select>
+
+  <div class="easy-step">
+    <span class="step-no">2</span>
+    <div><b>เลือกสินค้าที่ต้องการเชื่อม</b><small>ติ๊กได้หลายรายการ</small></div>
+  </div>
+  <div id="easyProductChoices" class="easy-product-grid"></div>
+
+  <div class="easy-step">
+    <span class="step-no">3</span>
+    <div><b>กำหนดจำนวนที่ใช้</b><small>ขายสินค้า 1 หน่วย ใช้วัตถุดิบกี่หน่วย</small></div>
+  </div>
+  <div class="easy-link-action">
+    <input id="easyQty" type="number" min="0.01" step="0.01" value="1">
+    <button class="btn primary" onclick="saveEasyMaterialLinks()">เชื่อมรายการที่เลือก</button>
+  </div>
+
+  <div class="easy-step">
+    <span class="step-no">✓</span>
+    <div><b>รายการที่เชื่อมอยู่</b><small>ดู แก้จำนวน หรือยกเลิกได้ด้านล่าง</small></div>
+  </div>
+</div>
+<div id="materialLinksTable"></div>
+</section>
+
+
+
+<section class="panel comparison-panel backoffice-only" id="todayVsYesterdayPanel" data-backpage-panel="reports">
+  <div class="panel-head">
+    <div>
+      <h2>วันนี้ เทียบ เมื่อวาน</h2>
+      <p id="todayVsYesterdayLabel">เปรียบเทียบยอดปัจจุบันแบบอัตโนมัติ</p>
+    </div>
+    <button class="btn ghost" onclick="renderTodayVsYesterday()">↻ อัปเดต</button>
+  </div>
+  <div id="todayVsYesterdayGrid" class="comparison-grid"></div>
+</section>
+
+
+
+<section class="panel backoffice-only" id="advancedReports" data-backpage-panel="reports">
+ <div class="report28">
+  <div class="report28-head">
+   <div><h2>รายงาน <span>V5.0</span></h2><p>รายงานยอดขายแบบ Real-time และย้อนหลัง</p></div>
+   <div class="report28-actions">
+    <button onclick="r28SavePdf()">📄 บันทึก PDF</button>
+    <button onclick="r28Print()">🖨 พิมพ์รายงาน</button>
+   </div>
+  </div>
+
+  <div class="r28-live"><b>● REAL-TIME</b><span id="r28Updated">กำลังโหลด...</span></div>
+
+  
+<div class="r29-simple-selector">
+  <h3>เลือกดูรายงาน</h3>
+  <div class="r29-selector-tabs">
+    <button id="r29DayTab" class="r29-tab active" onclick="r29ShowSelector('day')">📅 เลือกวันที่</button>
+    <button id="r29MonthTab" class="r29-tab" onclick="r29ShowSelector('month')">🗓 เลือกเดือน</button>
+  </div>
+
+  <div id="r29DaySelector" class="r29-selector-panel">
+    <label>เลือกวันที่
+      <input id="r29DayInput" type="date">
+    </label>
+    <button class="r29-go" onclick="r29ApplyDay()">ดูรายงานวันที่นี้</button>
+  </div>
+
+  <div id="r29MonthSelector" class="r29-selector-panel hidden">
+    <label>เลือกเดือน
+      <input id="r29MonthInput" type="month">
+    </label>
+    <button class="r29-go" onclick="r29ApplyMonth()">ดูรายงานเดือนนี้</button>
+  </div>
+</div>
+
+<div class="r28-calendar">
+   <h3>📅 เลือกช่วงวัน / เดือน / ปี</h3>
+   <div class="r28-presets">
+    <button onclick="r28Preset('today')">วันนี้</button>
+    <button onclick="r28Preset('yesterday')">เมื่อวาน</button>
+    <button onclick="r28Preset('7')">7 วันล่าสุด</button>
+    <button onclick="r28Preset('month')">เดือนนี้</button>
+    <button onclick="r28Preset('year')">ปีนี้</button>
+   </div>
+   <div class="r28-dates">
+    <label>ตั้งแต่วันที่<input id="r28Start" type="date"></label>
+    <b>→</b>
+    <label>ถึงวันที่<input id="r28End" type="date"></label>
+    <button class="r28-primary" onclick="r28Custom()">ดูรายงาน</button>
+   </div>
+   <div class="r28-to-now">
+    <label>วันที่เริ่มต้น<input id="r28ToNow" type="date"></label>
+    <button onclick="r28FromToNow()">จากวันที่เลือก → ถึงปัจจุบัน</button>
+   </div>
+   <div class="r28-month-year">
+    <label>เลือกเดือน<input id="r28Month" type="month"></label><button onclick="r28Month()">ดูเดือน</button>
+    <label>เลือกปี<input id="r28Year" type="number" min="2020" max="2100"></label><button onclick="r28Year()">ดูปี</button>
+   </div>
+  </div>
+
+  <div class="r28-period">ช่วงที่กำลังดู: <strong id="r28Period">วันนี้</strong></div>
+
+  <div class="r28-stats">
+   <div><small>ยอดขายรวม</small><strong id="r28Sales">฿0</strong></div>
+   <div><small>จำนวนบิล</small><strong id="r28Bills">0</strong></div>
+   <div><small>เฉลี่ย / บิล</small><strong id="r28Avg">฿0</strong></div>
+   <div><small>รายจ่าย</small><strong id="r28Expense">฿0</strong></div>
+   <div><small>ต้นทุน</small><strong id="r28Cost">฿0</strong></div>
+   <div><small>กำไรสุทธิ</small><strong id="r28Profit">฿0</strong></div>
+  </div>
+
+  <div class="r28-box"><h3>ช่องทางชำระเงิน</h3><div class="r28-pay">
+   <div><small>เงินสด</small><strong id="r28Cash">฿0</strong><span id="r28CashPct">0%</span></div>
+   <div><small>QR / โอน</small><strong id="r28Qr">฿0</strong><span id="r28QrPct">0%</span></div>
+   <div><small>บัตร</small><strong id="r28Card">฿0</strong><span id="r28CardPct">0%</span></div>
+  </div></div>
+  <div class="r28-box"><h3>ยอดขายแยกตามวัน</h3><div id="r28Daily"></div></div>
+  <div class="r28-box"><h3>สินค้าที่ขาย</h3><div id="r28Products"></div></div>
+  <div class="r28-box"><h3>รายการบิล</h3><div id="r28BillList"></div></div>
+ </div>
+</section>
+
+
+
+
+<section id="receiptDesignerPanel" class="card backoffice-only receipt60-panel" data-backpage-panel="receipt">
+  <div class="receipt60-head">
+    <div>
+      <h2>ตกแต่งสลิป / หัวบิล <span class="actual-v-badge">V5.0</span></h2>
+      <p class="muted">ออกแบบหัวสลิปแล้วดูตัวอย่างก่อนบันทึก ค่าที่บันทึกจะใช้กับสลิปขายจริง</p>
+    </div>
+    <button id="rd60SaveBtn" type="button" class="btn primary">💾 บันทึกการตกแต่ง</button>
+  </div>
+
+  <div class="receipt60-grid">
+    <div class="receipt60-controls">
+
+      <div class="receipt60-section">
+        <h3>1. รูปหัวสลิป / โลโก้</h3>
+        <div class="receipt-image-controls">
+          <button id="rd60ChooseHeader" type="button" class="btn">🖼️ เลือกรูปจากเครื่อง</button>
+          <button id="rd60ClearHeader" type="button" class="btn ghost">ลบรูป</button>
+        </div>
+        <input id="rdHeaderImage" type="hidden">
+
+        <label>ขนาดโลโก้ <span id="rd60LogoSizeText">80%</span></label>
+        <input id="rdLogoSize" type="range" min="30" max="100" step="5" value="80">
+      </div>
+
+      <div class="receipt60-section">
+        <h3>2. ข้อมูลหัวสลิป</h3>
+
+        <label>ชื่อร้าน / หัวบิล</label>
+        <input id="rdShopName" placeholder="YAK POS">
+
+        <label>ข้อความใต้ชื่อร้าน</label>
+        <input id="rdHeaderText" placeholder="เช่น ยักษ์สติ๊กเกอร์ สัตหีบ">
+
+        <label>เบอร์ติดต่อ</label>
+        <input id="rdPhone" placeholder="08x-xxx-xxxx">
+
+        <div class="receipt60-row">
+          <label>ขนาดชื่อร้าน
+            <select id="rdShopFontSize">
+              <option value="18">18 px</option>
+              <option value="20">20 px</option>
+              <option value="22" selected>22 px</option>
+              <option value="24">24 px</option>
+              <option value="26">26 px</option>
+              <option value="28">28 px</option>
+            </select>
+          </label>
+
+          <label>จัดตำแหน่ง
+            <select id="rdHeaderAlign">
+              <option value="left">ซ้าย</option>
+              <option value="center" selected>กึ่งกลาง</option>
+              <option value="right">ขวา</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="receipt60-section">
+        <h3>3. รายละเอียดที่แสดง</h3>
+        <div class="receipt60-checks">
+          <label><input type="checkbox" id="rdShowPhone"> แสดงเบอร์ติดต่อ</label>
+          <label><input type="checkbox" id="rdShowBillNo"> แสดงเลขบิล</label>
+          <label><input type="checkbox" id="rdShowEmployee"> แสดงชื่อพนักงาน</label>
+          <label><input type="checkbox" id="rdShowQr"> แสดง QR Code</label>
+        </div>
+
+        <div class="receipt-image-controls">
+          <button id="rd60ChooseQr" type="button" class="btn">เลือก QR Code</button>
+          <button id="rd60ClearQr" type="button" class="btn ghost">ลบ QR</button>
+        </div>
+        <input id="rdQrImage" type="hidden">
+
+        <label>ข้อความท้ายสลิป</label>
+        <input id="rdFooterText" placeholder="ขอบคุณที่ใช้บริการ">
+      </div>
+
+      <div class="receipt60-actions">
+        <button id="rd60ResetBtn" type="button" class="btn ghost">คืนค่าเริ่มต้น</button>
+        <button id="rd60SaveBtnBottom" type="button" class="btn success">💾 บันทึกและใช้งาน</button>
+      </div>
+    </div>
+
+    <div class="receipt60-preview-area">
+      <div class="receipt60-preview-head">
+        <h3>ตัวอย่างสลิป</h3>
+        <span>ตัวอย่างขนาดใกล้เคียงสลิปจริง</span>
+      </div>
+      <div id="receiptDesignPreview" class="receipt60-preview-bg"></div>
+    </div>
+  </div>
+</section>
+
+
+
+<section id="online500Panel" class="card backoffice-only hidden" data-backpage-panel="online"><div class="online500-head"><div><h2>☁️ YAK POS Online</h2><p class="muted">เชื่อม Cloud เพื่อให้ทุกเครื่องใช้ข้อมูลชุดเดียวกัน</p></div><span id="online500Status" class="badge orange">Offline</span></div><div class="online500-grid"><label>Supabase Project URL<input id="online500Url" placeholder="https://xxxxx.supabase.co"></label><label>Publishable / Anon Key<input id="online500Key" type="password" placeholder="sb_publishable_..."></label></div><div class="online500-actions"><button class="btn primary" onclick="YAK_ONLINE_500.connectFromForm()">เชื่อมต่อ Online</button><button class="btn" onclick="YAK_ONLINE_500.pushLocal()">อัปโหลดข้อมูลเครื่องนี้</button><button class="btn" onclick="YAK_ONLINE_500.pullCloud()">ดึงข้อมูลจาก Cloud</button><button class="btn ghost" onclick="YAK_ONLINE_500.disconnect()">ใช้ Offline</button></div><div id="online500Info" class="online500-info">ข้อมูล V4.4.69 เดิมยังอยู่ในเครื่อง</div></section>
+
+<nav id="yakBackNav" class="backoffice-only yak-back-nav">
+  <button type="button" class="yak-back-tab active" data-backpage="products">สินค้า</button>
+  <button type="button" class="yak-back-tab" data-backpage="stock">สต๊อก</button>
+  <button type="button" class="yak-back-tab" data-backpage="reports">รายงาน</button>
+  <button type="button" class="yak-back-tab" data-backpage="people">พนักงาน / สาขา</button>
+  <button type="button" class="yak-back-tab" data-backpage="receipt">ตกแต่งสลิป</button>
+  <button type="button" class="yak-back-tab" data-backpage="settings">ตั้งค่า</button>
+  <button type="button" class="yak-back-tab" data-backpage="online" onclick="YAK_ONLINE_500.openPage(event)">☁️ Online</button>
+  <div class="yak-version-chip">YAK POS V5.0</div>
+</nav>
+</main>
+
+
+    
+    
+    </div>
+
+    <div id="dailyIncomeModal" class="modal-overlay hidden">
+      <div class="modal-card receipt-preview-card">
+        <div class="modal-head">
+          <div>
+            <h2>ตัวอย่างสรุปรายรับวันนี้</h2>
+            <p>ตรวจสอบก่อนยืนยันการพิมพ์</p>
+          </div>
+          <button class="btn ghost" onclick="closeDailyIncomePreview()">✕ ปิด</button>
+        </div>
+        <div id="dailyIncomePreview" class="receipt-preview"></div>
+        <div class="modal-actions">
+          <button class="btn ghost" onclick="closeDailyIncomePreview()">ยกเลิก</button>
+          <button class="btn success" onclick="confirmPrintDailyIncome()">✅ ยืนยันการพิมพ์</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+  <script src="app.js"></script>
+  <script src="sidebar-v469.js"></script>
+  <script src="product-edit-v465.js"></script>
+  <script src="material-live-v442.js"></script>
+  <script src="report-v4432.js"></script>
+
+
+<div id="prod65Modal" class="prod65-overlay hidden" aria-hidden="true">
+  <div class="prod65-modal">
+    <div class="prod65-head">
+      <div>
+        <h2>✏️ แก้ไขสินค้า</h2>
+        <p id="prod65Subtitle">แก้ไขข้อมูลสินค้า</p>
+      </div>
+      <button id="prod65CloseX" type="button" class="btn ghost">✕</button>
+    </div>
+
+    <div class="prod65-grid">
+      <label>ชื่อสินค้า / บริการ
+        <input id="prod65Name">
+      </label>
+      <label>ราคาขาย
+        <input id="prod65Price" type="number" min="0" step="0.01">
+      </label>
+      <label>ต้นทุน
+        <input id="prod65Cost" type="number" min="0" step="0.01">
+      </label>
+      <label>สต๊อกสินค้า
+        <input id="prod65Stock" type="number" min="0" step="0.01">
+      </label>
+      <label>จุดเตือน
+        <input id="prod65MinStock" type="number" min="0" step="0.01">
+      </label>
+      <label>รูปแบบสต๊อก
+        <select id="prod65TrackStock">
+          <option value="yes">ตัดสต๊อกสินค้า</option>
+          <option value="no">ไม่ตัดสต๊อก / งานบริการ</option>
+        </select>
+      </label>
+      <label class="prod65-full">เปลี่ยนรูปสินค้า
+        <input id="prod65Image" type="file" accept="image/*">
+      </label>
+      <div id="prod65ImageNote" class="prod65-note prod65-full"></div>
+      <div id="prod65MaterialNote" class="prod65-material-note prod65-full"></div>
+    </div>
+
+    <div class="prod65-actions">
+      <button id="prod65Cancel" type="button" class="btn ghost">ยกเลิก</button>
+      <button id="prod65Save" type="button" class="btn success">💾 บันทึกการแก้ไข</button>
+    </div>
+  </div>
+</div>
+
+<script src="online-v500.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+YAK POS V5.0 Online Ready
+1 สร้าง Supabase Project
+2 SQL Editor > Run supabase-schema.sql
+3 คัดลอก Project URL + Publishable Key (ห้ามใช้ secret/service_role)
+4 หลังร้าน > ปุ่ม ☁️ Online
+5 ใส่ URL/Key > เชื่อมต่อ
+6 เครื่องหลักกด อัปโหลดข้อมูลเครื่องนี้ ครั้งแรก
+7 เครื่องอื่นใช้ URL/Key เดียวกัน > ดึงข้อมูลจาก Cloud
+
+V5.0 เป็น Online Bootstrap สำหรับทดสอบระบบกลางก่อน Production
+ขั้นต่อไปควรเพิ่ม Auth + RLS รายพนักงาน/สาขา
