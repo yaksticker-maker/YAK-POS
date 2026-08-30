@@ -194,7 +194,7 @@ function bitmapToEscPosRaster(bitmap, width, height) {
     Buffer.from([0x1b, 0x40]),                 // ESC @ init
     Buffer.from([0x1d, 0x76, 0x30, 0x00, xL, xH, yL, yH]),
     data,
-    Buffer.from([0x0a, 0x0a, 0x0a, 0x0a])
+    Buffer.from([0x0a, 0x0a])
   ]);
 }
 
@@ -233,7 +233,7 @@ async function renderHtmlToEscPos(html, paper='58') {
         overflow:hidden!important;
       }
       body{
-        padding:6px ${sidePadding}px 12px!important;
+        padding:4px ${sidePadding}px 4px!important;
         font-family:Tahoma,Arial,sans-serif!important;
         font-size:${fontSize}px!important;
         line-height:1.28!important;
@@ -263,15 +263,32 @@ async function renderHtmlToEscPos(html, paper='58') {
   await win.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(doc));
   win.webContents.setZoomFactor(1);
 
-  let contentHeight = await win.webContents.executeJavaScript(
-    'Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)'
-  );
-  contentHeight = Math.max(120, Math.min(Math.ceil(contentHeight) + 6, 5000));
+  // Measure the real bottom edge of receipt content instead of the browser viewport.
+  // This prevents a tall blank bitmap from being sent to continuous thermal paper.
+  let contentHeight = await win.webContents.executeJavaScript(`
+    (() => {
+      const body = document.body;
+      const children = Array.from(body.children);
+      let bottom = 0;
+      for (const el of children) {
+        const r = el.getBoundingClientRect();
+        bottom = Math.max(bottom, r.bottom);
+      }
+      return Math.ceil(Math.max(bottom, body.getBoundingClientRect().bottom, 1));
+    })()
+  `);
+  contentHeight = Math.max(1, Math.min(Math.ceil(contentHeight) + 2, 5000));
 
-  win.setContentSize(targetWidth, contentHeight);
-  await new Promise(r => setTimeout(r, 120));
+  win.setContentSize(targetWidth, Math.max(120, contentHeight));
+  await new Promise(r => setTimeout(r, 80));
 
-  let image = await win.webContents.capturePage();
+  // IMPORTANT: capture only the receipt content area, not the whole hidden window.
+  let image = await win.webContents.capturePage({
+    x: 0,
+    y: 0,
+    width: targetWidth,
+    height: contentHeight
+  });
 
   // On Windows with 125%/150% display scaling, capturePage may return a bitmap
   // wider than the CSS width. Force it back to the exact thermal head width.

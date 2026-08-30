@@ -1423,3 +1423,12 @@ body.yak-backoffice [data-backpage-panel].yak-page-active{
   width:100%;padding:10px 12px;border:1px solid #3a3d45;
   border-radius:10px;background:#181a20;color:#fff
 }
+
+/* YAK POS V5.4.6 - daily item summary */
+#yak546ItemSummary{margin:8px 0 10px;padding:8px 0;border-top:1px dashed #555;border-bottom:1px dashed #555}
+.yak546-title{font-weight:800;margin-bottom:6px}
+.yak546-items{display:flex;flex-direction:column;gap:4px}
+.yak546-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:start;font-size:13px}
+.yak546-name{overflow-wrap:anywhere}.yak546-qty,.yak546-amt{white-space:nowrap;text-align:right}.yak546-amt{font-weight:700}
+.yak546-empty{opacity:.7;font-size:13px}
+.yak546-print-block{margin:6px 0;padding:6px 0;border-top:1px dashed #555;border-bottom:1px dashed #555;font-size:12px}
